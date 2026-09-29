@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoRecycle AI - Smart Battery Recycling Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #059669;
+            --secondary: #2563eb;
+            --accent: #d97706;
+            --danger: #dc2626;
+            --success: #059669;
+            --warning: #d97706;
+            --dark: #111827;
+            --light: #f8fafc;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --gradient-primary: linear-gradient(135deg, #059669, #2563eb);
+            --gradient-secondary: linear-gradient(135deg, #2563eb, #7c3aed);
+        }
+
+        .dark {
+            --light: #0f172a;
+            --dark: #f8fafc;
+            --text: #f8fafc;
+            --text-light: #94a3b8;
+            --border: #334155;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+            background: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Professional Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .dark .header {
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: var(--gradient-primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .points {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Professional Hero Section */
+        .hero {
+            text-align: center;
+            padding: 6rem 0;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 2rem;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(100px); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.025em;
+        }
+
+        .hero p {
+            font-size: 1.375rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Section Management */
+        .section {
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Professional Dashboard */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .dark .card {
+            background: var(--dark);
+            border-color: var(--border);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .card-icon {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .card-icon.vision { background: var(--gradient-primary); }
+        .card-icon.recycling { background: linear-gradient(135deg, #10b981, #059669); }
+        .card-icon.iot { background: linear-gradient(135deg, #06b6d4, #3b82f6); }
+        .card-icon.flow { background: linear-gradient(135deg, #10b981, #059669); }
+        .card-icon.impact { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .card-icon.rewards { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+
+        /* Professional Camera Section */
+        .camera-container {
+            position: relative;
+            background: var(--dark);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .camera-video {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .camera-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .camera-btn {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 0.875rem 1.75rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+        }
+
+        .camera-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow);
+        }
+
+        .camera-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .camera-status {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Professional Analysis Results */
+        .analysis-result {
+            background: var(--light);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2rem;
+            display: none;
+            border: 1px solid var(--border);
+        }
+
+        .analysis-result.active {
+            display: block;
+            animation: slideIn 0.6s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .component-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .component-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow);
+        }
+
+        .component-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .component-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .confidence {
+            background: var(--success);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+
+        /* Professional Smart Bins */
+        .bin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .smart-bin {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .smart-bin:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .bin-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .bin-status.online { background: var(--success); }
+        .bin-status.offline { background: var(--danger); }
+        .bin-status.warning { background: var(--warning); }
+
+        .bin-fill {
+            width: 100%;
+            height: 120px;
+            background: var(--border);
+            border-radius: 0.75rem;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bin-fill-level {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--gradient-primary);
+            transition: height 0.5s ease;
+        }
+
+        /* Professional Impact Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .metric-label {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .metric-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--light);
+            border: 2px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Professional Chatbot */
+        .chatbot {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 420px;
+            height: 550px;
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .chatbot.active {
+            display: flex;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .chat-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 1.5rem 1.5rem 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            padding: 1rem 1.25rem;
+            border-radius: 1.25rem;
+            max-width: 85%;
+            word-wrap: break-word;
+            font-size: 0.875rem;
+        }
+
+        .message.user {
+            background: var(--gradient-primary);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .message.bot {
+            background: var(--light);
+            color: var(--text);
+            align-self: flex-start;
+        }
+
+        .message.typing {
+            background: var(--light);
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .chat-input {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.875rem;
+            border: 2px solid var(--border);
+            border-radius: 0.75rem;
+            outline: none;
+            font-size: 0.875rem;
+        }
+
+        .chat-input input:focus {
+            border-color: var(--primary);
+        }
+
+        .chat-input button {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 0.875rem 1.25rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .chat-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.75rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            z-index: 1001;
+            transition: all 0.3s ease;
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .chatbot {
+                width: 100%;
+                height: 100%;
+                bottom: 0;
+                right: 0;
+                border-radius: 0;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .focus-visible {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">
+                ♻️ EcoRecycle AI
+            </div>
+            <div class="nav-links">
+                <a href="#" onclick="showSection('dashboard', event)" class="nav-link">Dashboard</a>
+                <a href="#" onclick="showSection('vision', event)" class="nav-link">Vision AI</a>
+                <a href="#" onclick="showSection('recycling', event)" class="nav-link">Recycling</a>
+                <a href="#" onclick="showSection('iot', event)" class="nav-link">Smart Bins</a>
+                <a href="#" onclick="showSection('flow', event)" class="nav-link">Circular Flow</a>
+                <a href="#" onclick="showSection('impact', event)" class="nav-link">Impact</a>
+                <a href="#" onclick="showSection('rewards', event)" class="nav-link">Rewards</a>
+            </div>
+            <div class="user-info">
+                <div class="points">1,250 pts</div>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main container">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="hero">
+                <h1>EcoRecycle AI - Smart Battery Recycling</h1>
+                <p>Advanced battery recycling technology that recovers valuable metals, conserves resources, and creates circular economy opportunities</p>
+            </div>
+
+            <div class="dashboard">
+                <!-- Computer Vision Card -->
+                <div class="card fade-in" onclick="showSection('vision', event)">
+                    <div class="card-header">
+                        <div class="card-title">Computer Vision Recognition</div>
+                        <div class="card-icon vision">📷</div>
+                    </div>
+                    <p>Live camera detection with real-time AI analysis of e-waste components, safety assessment, and recycling recommendations.</p>
+                </div>
+
+                <!-- Battery Recycling Card -->
+                <div class="card fade-in" onclick="showSection('recycling', event)">
+                    <div class="card-header">
+                        <div class="card-title">Smart Battery Recycling</div>
+                        <div class="card-icon recycling">♻️</div>
+                    </div>
+                    <p>Advanced battery recycling that recovers valuable metals, conserves resources, and creates circular economy opportunities.</p>
+                </div>
+
+                <!-- IoT Smart Bins Card -->
+                <div class="card fade-in" onclick="showSection('iot', event)">
+                    <div class="card-header">
+                        <div class="card-title">IoT Smart Collection Bins</div>
+                        <div class="card-icon iot">📡</div>
+                    </div>
+                    <p>Real-time monitoring, intelligent pickup scheduling, and optimized collection routes for maximum efficiency.</p>
+                </div>
+
+                <!-- Circular Flow Card -->
+                <div class="card fade-in" onclick="showSection('flow', event)">
+                    <div class="card-header">
+                        <div class="card-title">Circular Material Flow</div>
+                        <div class="card-icon flow">♻️</div>
+                    </div>
+                    <p>Complete material lifecycle tracking from collection to reuse with sustainability metrics and impact visualization.</p>
+                </div>
+
+                <!-- Impact Tracking Card -->
+                <div class="card fade-in" onclick="showSection('impact', event)">
+                    <div class="card-header">
+                        <div class="card-title">Environmental Impact</div>
+                        <div class="card-icon impact">🌍</div>
+                    </div>
+                    <p>Comprehensive environmental impact tracking with dynamic metrics, filtering options, and long-term progress analysis.</p>
+                </div>
+
+                <!-- Rewards Card -->
+                <div class="card fade-in" onclick="showSection('rewards', event)">
+                    <div class="card-header">
+                        <div class="card-title">User Rewards & Gamification</div>
+                        <div class="card-icon rewards">🏆</div>
+                    </div>
+                    <p>Customizable rewards system with achievement badges, points tracking, and personalized milestone celebrations.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vision AI Section -->
+        <section id="vision" class="section">
+            <h2>Live Camera Detection & AI Analysis</h2>
+            <p>Real-time camera streaming for instant e-waste recognition, safety analysis, and recycling recommendations</p>
+            
+            <div class="camera-container">
+                <video id="cameraVideo" class="camera-video" autoplay muted></video>
+                <div class="camera-controls">
+                    <button id="startCamera" class="camera-btn">Start Camera</button>
+                    <button id="captureBtn" class="camera-btn" disabled>Capture & Analyze</button>
+                    <button id="stopCamera" class="camera-btn" disabled>Stop Camera</button>
+                    <div class="camera-status" id="cameraStatus">Camera Off</div>
+                </div>
+            </div>
+
+            <div id="visionResult" class="analysis-result">
+                <h4>AI Analysis Results:</h4>
+                <div id="componentsList"></div>
+            </div>
+        </section>
+
+        <!-- Recycling Section -->
+        <section id="recycling" class="section">
+            <h2>Smart Battery Recycling</h2>
+            <p>Advanced battery recycling that recovers valuable metals, conserves natural resources, and reduces harmful pollution while creating circular economy opportunities</p>
+            
+            <!-- Recycling Benefits -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2rem 0;">
+                <div style="background: white; border-radius: 1rem; padding: 2rem; border: 1px solid var(--border); text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">💎</div>
+                    <h3>Valuable Metal Recovery</h3>
+                    <p>Extract lithium, cobalt, nickel, and other precious metals from used batteries for reuse in new products</p>
+                </div>
+                <div style="background: white; border-radius: 1rem; padding: 2rem; border: 1px solid var(--border); text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🌱</div>
+                    <h3>Resource Conservation</h3>
+                    <p>Reduce mining of virgin materials and conserve natural resources through efficient battery recycling</p>
+                </div>
+                <div style="background: white; border-radius: 1rem; padding: 2rem; border: 1px solid var(--border); text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🌍</div>
+                    <h3>Pollution Reduction</h3>
+                    <p>Prevent harmful chemicals from entering landfills and water systems through proper battery disposal</p>
+                </div>
+            </div>
+
+            <!-- Second Life Applications -->
+            <div style="background: var(--light); border-radius: 1.5rem; padding: 2rem; margin: 2rem 0;">
+                <h3>Second Life Applications</h3>
+                <p style="margin: 1rem 0; color: var(--text-light);">Repurposed batteries support daily uses and renewable energy integration</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
+                    <!-- Home Energy Storage -->
+                    <div style="background: white; padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🏠</div>
+                        <h4 style="margin-bottom: 1rem;">Home Energy Storage</h4>
+                        <p style="margin-bottom: 1rem; color: var(--text-light);">Transform used batteries into home energy storage systems</p>
+                        <div style="background: var(--light); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem; color: var(--primary);">How It Works:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>Store solar energy during peak generation</li>
+                                <li>Power home during evening hours</li>
+                                <li>Reduce electricity bills by 40-60%</li>
+                                <li>Backup power during outages</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--primary); color: white; padding: 0.75rem; border-radius: 0.5rem; text-align: center; font-weight: 600;">
+                            Save $200-400/month on electricity
+                        </div>
+                    </div>
+
+                    <!-- Renewable Power Integration -->
+                    <div style="background: white; padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">⚡</div>
+                        <h4 style="margin-bottom: 1rem;">Renewable Power Integration</h4>
+                        <p style="margin-bottom: 1rem; color: var(--text-light);">Support grid stability with renewable energy storage</p>
+                        <div style="background: var(--light); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem; color: var(--primary);">Grid Benefits:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>Stabilize renewable energy fluctuations</li>
+                                <li>Peak shaving and load balancing</li>
+                                <li>Frequency regulation services</li>
+                                <li>Reduce grid infrastructure costs</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--secondary); color: white; padding: 0.75rem; border-radius: 0.5rem; text-align: center; font-weight: 600;">
+                            Support 1MW+ renewable projects
+                        </div>
+                    </div>
+
+                    <!-- Extended Battery Life -->
+                    <div style="background: white; padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔋</div>
+                        <h4 style="margin-bottom: 1rem;">Extended Battery Life</h4>
+                        <p style="margin-bottom: 1rem; color: var(--text-light);">Maximize battery utility through smart repurposing</p>
+                        <div style="background: var(--light); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem; color: var(--primary);">Life Extension Methods:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>Battery health monitoring and balancing</li>
+                                <li>Temperature-controlled storage</li>
+                                <li>Partial capacity applications</li>
+                                <li>Modular battery systems</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--accent); color: white; padding: 0.75rem; border-radius: 0.5rem; text-align: center; font-weight: 600;">
+                            Extend life by 3-5 years
+                        </div>
+                    </div>
+
+                    <!-- Circular Economy -->
+                    <div style="background: white; padding: 2rem; border-radius: 1rem; border: 1px solid var(--border);">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">♻️</div>
+                        <h4 style="margin-bottom: 1rem;">Circular Economy</h4>
+                        <p style="margin-bottom: 1rem; color: var(--text-light);">Create economic opportunities through sustainable practices</p>
+                        <div style="background: var(--light); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem; color: var(--primary);">Economic Impact:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>Create 50,000+ green jobs</li>
+                                <li>$2.5B annual market value</li>
+                                <li>Local manufacturing opportunities</li>
+                                <li>Export recycled materials globally</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--success); color: white; padding: 0.75rem; border-radius: 0.5rem; text-align: center; font-weight: 600;">
+                            $500M+ economic value
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Battery Life Management -->
+            <div style="background: white; border-radius: 1.5rem; padding: 2rem; margin: 2rem 0; border: 1px solid var(--border);">
+                <h3>Smart Battery Life Management</h3>
+                <p style="margin: 1rem 0; color: var(--text-light);">AI-powered insights to maximize battery performance and lifespan</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                    <div style="background: var(--light); padding: 1.5rem; border-radius: 1rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                        <h4>Health Monitoring</h4>
+                        <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 1rem;">Real-time battery health tracking</p>
+                        <div style="background: var(--primary); color: white; padding: 0.5rem; border-radius: 0.25rem; text-align: center; font-size: 0.875rem;">
+                            SOH: 85% | Cycles: 1,200
+                        </div>
+                    </div>
+                    <div style="background: var(--light); padding: 1.5rem; border-radius: 1rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌡️</div>
+                        <h4>Temperature Control</h4>
+                        <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 1rem;">Optimal temperature management</p>
+                        <div style="background: var(--secondary); color: white; padding: 0.5rem; border-radius: 0.25rem; text-align: center; font-size: 0.875rem;">
+                            Optimal: 20-25°C
+                        </div>
+                    </div>
+                    <div style="background: var(--light); padding: 1.5rem; border-radius: 1rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚡</div>
+                        <h4>Charging Optimization</h4>
+                        <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 1rem;">Smart charging algorithms</p>
+                        <div style="background: var(--accent); color: white; padding: 0.5rem; border-radius: 0.25rem; text-align: center; font-size: 0.875rem;">
+                            Extend life by 30%
+                        </div>
+                    </div>
+                    <div style="background: var(--light); padding: 1.5rem; border-radius: 1rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔄</div>
+                        <h4>Usage Patterns</h4>
+                        <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 1rem;">Optimize usage for longevity</p>
+                        <div style="background: var(--success); color: white; padding: 0.5rem; border-radius: 0.25rem; text-align: center; font-size: 0.875rem;">
+                            Smart scheduling
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Smart Battery Recycling Process -->
+            <div style="background: var(--dark); color: white; border-radius: 1.5rem; padding: 2rem; margin: 2rem 0;">
+                <h3>Smart Battery Recycling Process</h3>
+                <p style="margin: 1rem 0; opacity: 0.9;">AI-powered recycling that maximizes material recovery and creates sustainable value</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                    <div style="text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.1); border-radius: 1rem;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                        <h4 style="margin-bottom: 1rem;">AI Battery Analysis</h4>
+                        <p style="font-size: 0.875rem; opacity: 0.9; margin-bottom: 1rem;">Advanced AI identifies battery chemistry, capacity, and health status</p>
+                        <div style="background: var(--primary); padding: 0.5rem; border-radius: 0.5rem; font-size: 0.875rem;">
+                            <strong>95% Accuracy</strong> in battery identification
+                        </div>
+                    </div>
+                    <div style="text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.1); border-radius: 1rem;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">⚗️</div>
+                        <h4 style="margin-bottom: 1rem;">Safe Dismantling</h4>
+                        <p style="font-size: 0.875rem; opacity: 0.9; margin-bottom: 1rem;">Robotic disassembly with zero-waste protocols</p>
+                        <div style="background: var(--secondary); padding: 0.5rem; border-radius: 0.5rem; font-size: 0.875rem;">
+                            <strong>100% Safety</strong> record maintained
+                        </div>
+                    </div>
+                    <div style="text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.1); border-radius: 1rem;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🧪</div>
+                        <h4 style="margin-bottom: 1rem;">Material Recovery</h4>
+                        <p style="font-size: 0.875rem; opacity: 0.9; margin-bottom: 1rem;">Extract lithium, cobalt, nickel with 95% efficiency</p>
+                        <div style="background: var(--accent); padding: 0.5rem; border-radius: 0.5rem; font-size: 0.875rem;">
+                            <strong>95% Recovery</strong> rate achieved
+                        </div>
+                    </div>
+                    <div style="text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.1); border-radius: 1rem;">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔄</div>
+                        <h4 style="margin-bottom: 1rem;">Smart Repurposing</h4>
+                        <p style="font-size: 0.875rem; opacity: 0.9; margin-bottom: 1rem;">Transform materials for energy storage applications</p>
+                        <div style="background: var(--success); padding: 0.5rem; border-radius: 0.5rem; font-size: 0.875rem;">
+                            <strong>3-5 Years</strong> extended life
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Battery Usage Guide -->
+            <div style="background: white; border-radius: 1.5rem; padding: 2rem; margin: 2rem 0; border: 1px solid var(--border);">
+                <h3>How to Use Your Batteries Effectively</h3>
+                <p style="margin: 1rem 0; color: var(--text-light);">Expert tips to maximize battery performance and lifespan</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
+                    <div style="background: var(--light); padding: 1.5rem; border-radius: 1rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--primary);">🔋 Charging Best Practices</h4>
+                        <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                            <li>Keep charge between 20-80% for optimal life</li>
+                            <li>Avoid deep discharges below 10%</li>
+                            <li>Use slow charging when possible</li>
+                            <li>Don't charge in extreme temperatures</li>
+                            <li>Unplug when fully charged</li>
+                        </ul>
+                    </div>
+                    <div style="background: var(--light); padding: 1.5rem; border-radius: 1rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--secondary);">🌡️ Temperature Management</h4>
+                        <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                            <li>Store batteries at 20-25°C (68-77°F)</li>
+                            <li>Avoid direct sunlight exposure</li>
+                            <li>Don't use in temperatures below 0°C</li>
+                            <li>Keep away from heat sources</li>
+                            <li>Allow cooling before charging</li>
+                        </ul>
+                    </div>
+                    <div style="background: var(--light); padding: 1.5rem; border-radius: 1rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--accent);">⚡ Usage Optimization</h4>
+                        <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                            <li>Use battery saver modes when available</li>
+                            <li>Close unused apps and services</li>
+                            <li>Reduce screen brightness when possible</li>
+                            <li>Turn off location services when not needed</li>
+                            <li>Use Wi-Fi instead of cellular data</li>
+                        </ul>
+                    </div>
+                    <div style="background: var(--light); padding: 1.5rem; border-radius: 1rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--success);">🔄 Maintenance Tips</h4>
+                        <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                            <li>Clean battery contacts regularly</li>
+                            <li>Update device software for optimization</li>
+                            <li>Calibrate battery monthly</li>
+                            <li>Check for physical damage</li>
+                            <li>Monitor battery health indicators</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chemical Analysis & Recovery -->
+            <div style="background: white; border-radius: 1.5rem; padding: 2rem; margin: 2rem 0; border: 1px solid var(--border);">
+                <h3>Chemical Recovery & Utilization</h3>
+                <p style="margin: 1rem 0; color: var(--text-light);">Detailed analysis of chemicals recovered from battery recycling and their applications</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
+                    <!-- Lithium -->
+                    <div style="background: var(--light); padding: 2rem; border-radius: 1rem; border-left: 4px solid var(--primary);">
+                        <h4 style="color: var(--primary); margin-bottom: 1rem;">🔋 Lithium (Li)</h4>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Chemical Properties:</h5>
+                            <p style="font-size: 0.875rem; color: var(--text-light);">Lightest metal, highly reactive, excellent electrical conductivity</p>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Recovery Process:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>Hydrometallurgical leaching with sulfuric acid</li>
+                                <li>Solvent extraction using organic compounds</li>
+                                <li>Precipitation as lithium carbonate</li>
+                                <li>Purification to 99.5% purity</li>
+                            </ul>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Recycling Applications:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>New lithium-ion battery production</li>
+                                <li>Energy storage systems</li>
+                                <li>Electric vehicle batteries</li>
+                                <li>Grid-scale storage solutions</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--primary); color: white; padding: 0.75rem; border-radius: 0.5rem; text-align: center; font-weight: 600;">
+                            Recovery Rate: 95% | Value: $15,000/ton
+                        </div>
+                    </div>
+
+                    <!-- Cobalt -->
+                    <div style="background: var(--light); padding: 2rem; border-radius: 1rem; border-left: 4px solid var(--secondary);">
+                        <h4 style="color: var(--secondary); margin-bottom: 1rem;">🔵 Cobalt (Co)</h4>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Chemical Properties:</h5>
+                            <p style="font-size: 0.875rem; color: var(--text-light);">Hard, lustrous metal, excellent thermal stability, magnetic properties</p>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Recovery Process:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>Pyrometallurgical smelting at 1,200°C</li>
+                                <li>Leaching with hydrochloric acid</li>
+                                <li>Solvent extraction with Cyanex 272</li>
+                                <li>Electrowinning for pure cobalt metal</li>
+                            </ul>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Recycling Applications:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>High-performance battery cathodes</li>
+                                <li>Superalloys for aerospace</li>
+                                <li>Magnetic materials</li>
+                                <li>Catalysts for chemical processes</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--secondary); color: white; padding: 0.75rem; border-radius: 0.5rem; text-align: center; font-weight: 600;">
+                            Recovery Rate: 90% | Value: $50,000/ton
+                        </div>
+                    </div>
+
+                    <!-- Nickel -->
+                    <div style="background: var(--light); padding: 2rem; border-radius: 1rem; border-left: 4px solid var(--accent);">
+                        <h4 style="color: var(--accent); margin-bottom: 1rem;">🟡 Nickel (Ni)</h4>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Chemical Properties:</h5>
+                            <p style="font-size: 0.875rem; color: var(--text-light);">Ductile metal, corrosion resistant, good electrical conductivity</p>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Recovery Process:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>Hydrometallurgical leaching with H₂SO₄</li>
+                                <li>Precipitation as nickel hydroxide</li>
+                                <li>Reduction with hydrogen gas</li>
+                                <li>Electrolytic refining for purity</li>
+                            </ul>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Recycling Applications:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>Stainless steel production</li>
+                                <li>Battery electrode materials</li>
+                                <li>Electroplating applications</li>
+                                <li>Catalysts and alloys</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--accent); color: white; padding: 0.75rem; border-radius: 0.5rem; text-align: center; font-weight: 600;">
+                            Recovery Rate: 92% | Value: $18,000/ton
+                        </div>
+                    </div>
+
+                    <!-- Manganese -->
+                    <div style="background: var(--light); padding: 2rem; border-radius: 1rem; border-left: 4px solid var(--success);">
+                        <h4 style="color: var(--success); margin-bottom: 1rem;">🟢 Manganese (Mn)</h4>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Chemical Properties:</h5>
+                            <p style="font-size: 0.875rem; color: var(--text-light);">Hard, brittle metal, multiple oxidation states, essential trace element</p>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Recovery Process:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>Leaching with sulfuric acid at 80°C</li>
+                                <li>Oxidation to MnO₂</li>
+                                <li>Precipitation as manganese carbonate</li>
+                                <li>Calcination to manganese oxide</li>
+                            </ul>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Recycling Applications:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>Steel production (deoxidizer)</li>
+                                <li>Battery cathode materials</li>
+                                <li>Fertilizer production</li>
+                                <li>Water treatment chemicals</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--success); color: white; padding: 0.75rem; border-radius: 0.5rem; text-align: center; font-weight: 600;">
+                            Recovery Rate: 88% | Value: $2,500/ton
+                        </div>
+                    </div>
+
+                    <!-- Graphite -->
+                    <div style="background: var(--light); padding: 2rem; border-radius: 1rem; border-left: 4px solid #6b7280;">
+                        <h4 style="color: #6b7280; margin-bottom: 1rem;">⚫ Graphite (C)</h4>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Chemical Properties:</h5>
+                            <p style="font-size: 0.875rem; color: var(--text-light);">Carbon allotrope, excellent electrical conductor, layered structure</p>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Recovery Process:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>Mechanical separation from electrodes</li>
+                                <li>Thermal treatment at 800°C</li>
+                                <li>Chemical purification with acids</li>
+                                <li>Graphitization at 2,800°C</li>
+                            </ul>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Recycling Applications:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>Battery anode materials</li>
+                                <li>Lubricants and coatings</li>
+                                <li>Conductive additives</li>
+                                <li>Refractory materials</li>
+                            </ul>
+                        </div>
+                        <div style="background: #6b7280; color: white; padding: 0.75rem; border-radius: 0.5rem; text-align: center; font-weight: 600;">
+                            Recovery Rate: 85% | Value: $8,000/ton
+                        </div>
+                    </div>
+
+                    <!-- Electrolyte Salts -->
+                    <div style="background: var(--light); padding: 2rem; border-radius: 1rem; border-left: 4px solid #8b5cf6;">
+                        <h4 style="color: #8b5cf6; margin-bottom: 1rem;">🧪 Electrolyte Salts (LiPF₆)</h4>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Chemical Properties:</h5>
+                            <p style="font-size: 0.875rem; color: var(--text-light);">Lithium hexafluorophosphate, highly soluble, conductive salt</p>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Recovery Process:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>Solvent extraction from electrolyte</li>
+                                <li>Distillation and purification</li>
+                                <li>Crystallization process</li>
+                                <li>Quality control testing</li>
+                            </ul>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Recycling Applications:</h5>
+                            <ul style="font-size: 0.875rem; color: var(--text-light); margin-left: 1rem;">
+                                <li>New battery electrolyte</li>
+                                <li>Chemical synthesis</li>
+                                <li>Catalyst preparation</li>
+                                <li>Research applications</li>
+                            </ul>
+                        </div>
+                        <div style="background: #8b5cf6; color: white; padding: 0.75rem; border-radius: 0.5rem; text-align: center; font-weight: 600;">
+                            Recovery Rate: 80% | Value: $25,000/ton
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Environmental Impact -->
+            <div style="background: white; border-radius: 1.5rem; padding: 2rem; margin: 2rem 0; border: 1px solid var(--border);">
+                <h3>Environmental & Economic Benefits</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; color: var(--primary); font-weight: 700;">95%</div>
+                        <p style="color: var(--text-light);">Material Recovery Rate</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; color: var(--primary); font-weight: 700;">60%</div>
+                        <p style="color: var(--text-light);">Reduction in Mining</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; color: var(--primary); font-weight: 700;">$2.5B</div>
+                        <p style="color: var(--text-light);">Annual Market Value</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; color: var(--primary); font-weight: 700;">50K</div>
+                        <p style="color: var(--text-light);">Jobs Created</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- IoT Smart Bins Section -->
+        <section id="iot" class="section">
+            <h2>IoT Smart Collection Bins</h2>
+            <p>Real-time monitoring and intelligent pickup scheduling for optimized collection efficiency</p>
+            
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-top: 1rem;">
+                <div>
+                    <label for="binFilter" style="font-weight: 700; margin-right: 0.5rem;">Filter</label>
+                    <select id="binFilter" style="padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 0.5rem;">
+                        <option value="all">All</option>
+                        <option value="online">Online</option>
+                        <option value="warning">Needs Pickup</option>
+                        <option value="offline">Offline</option>
+                    </select>
+                </div>
+                <button id="optimizeRoutesBtn" class="camera-btn">Optimize Collection Routes</button>
+                <small style="color: var(--text-light);">Legend:
+                    <span style="color: var(--success); font-weight:700;">● Online</span>
+                    · <span style="color: var(--warning); font-weight:700;">● Needs Pickup</span>
+                    · <span style="color: var(--danger); font-weight:700;">● Offline</span>
+                </small>
+            </div>
+            
+            <div class="bin-grid" id="binGrid">
+                <!-- Bins will be populated here -->
+            </div>
+        </section>
+
+        <!-- Circular Flow Section -->
+        <section id="flow" class="section">
+            <h2>Circular Material Flow</h2>
+            <p>End-to-end lifecycle from safe collection to reuse with key performance indicators</p>
+            
+            <div style="background: var(--light); border-radius: 1.5rem; padding: 2rem; margin: 2rem 0;">
+                <h3>Material Lifecycle Flow</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <div style="background: white; padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border);"><div style="font-size: 2rem; margin-bottom: 0.5rem;">📦</div><h4>Collection</h4><p>Smart bins + pickups</p></div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border);"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🔌</div><h4>Safe Discharge</h4><p>Energy neutralization</p></div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border);"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🛠️</div><h4>Dismantling</h4><p>Module separation</p></div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border);"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🌀</div><h4>Shredding</h4><p>Mechanical breakdown</p></div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border);"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🧪</div><h4>Hydromet</h4><p>Leach + extract</p></div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border);"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🏭</div><h4>Refining</h4><p>Battery-grade salts</p></div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border);"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🔋</div><h4>Re-manufacture</h4><p>New cells & packs</p></div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border);"><div style="font-size: 2rem; margin-bottom: 0.5rem;">♻️</div><h4>Second Life</h4><p>Energy storage</p></div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border);"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🚚</div><h4>Logistics</h4><p>Tracking & chain</p></div>
+                    <div style="background: white; padding: 1.5rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border);"><div style="font-size: 2rem; margin-bottom: 0.5rem;">✅</div><h4>QA & Cert</h4><p>Compliance docs</p></div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+                    <div style="background: white; border: 1px solid var(--border); border-radius: 1rem; padding: 1rem; text-align:center;"><div style="font-weight:700; color: var(--primary);">95%</div><small style="color: var(--text-light);">Recovery rate</small></div>
+                    <div style="background: white; border: 1px solid var(--border); border-radius: 1rem; padding: 1rem; text-align:center;"><div style="font-weight:700; color: var(--secondary);">-60%</div><small style="color: var(--text-light);">Mining reduction</small></div>
+                    <div style="background: white; border: 1px solid var(--border); border-radius: 1rem; padding: 1rem; text-align:center;"><div style="font-weight:700; color: var(--accent);">+30%</div><small style="color: var(--text-light);">Energy savings</small></div>
+                    <div style="background: white; border: 1px solid var(--border); border-radius: 1rem; padding: 1rem; text-align:center;"><div style="font-weight:700; color: var(--success);">CO₂ ↓</div><small style="color: var(--text-light);">Carbon avoided</small></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Impact Section -->
+        <section id="impact" class="section">
+            <h2>Environmental Impact Tracking</h2>
+            <p>Comprehensive environmental impact tracking with dynamic metrics and filtering options</p>
+            
+            <div class="metric-filters">
+                <button class="filter-btn active" onclick="filterMetrics('all')">All Time</button>
+                <button class="filter-btn" onclick="filterMetrics('month')">This Month</button>
+                <button class="filter-btn" onclick="filterMetrics('week')">This Week</button>
+                <button class="filter-btn" onclick="filterMetrics('day')">Today</button>
+            </div>
+
+            <div class="metrics-grid" id="metricsGrid">
+                <div class="metric-card">
+                    <div class="metric-value">2.4</div>
+                    <div class="metric-label">Tons CO₂ Saved</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">156</div>
+                    <div class="metric-label">Devices Recycled</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">89%</div>
+                    <div class="metric-label">Recovery Rate</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">$3.2K</div>
+                    <div class="metric-label">Value Recovered</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rewards Section -->
+        <section id="rewards" class="section">
+            <h2>User Rewards & Gamification</h2>
+            <p>Customizable rewards system with achievement badges and personalized milestone celebrations</p>
+            
+            <div style="text-align: center; margin: 3rem 0;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🎯</div>
+                <h3>Your Impact Score: 1,250</h3>
+                <p style="margin: 1rem 0; font-size: 1.125rem;">Keep recycling to unlock new achievements!</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div style="background: var(--light); padding: 2rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🥇</div>
+                    <div style="font-weight: 700; margin-bottom: 0.5rem; font-size: 1.125rem;">Eco Warrior</div>
+                    <div style="color: var(--text-light);">Recycled 100+ items</div>
+                </div>
+                <div style="background: var(--light); padding: 2rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">♻️</div>
+                    <div style="font-weight: 700; margin-bottom: 0.5rem; font-size: 1.125rem;">Recycler</div>
+                    <div style="color: var(--text-light);">Consistent recycling</div>
+                </div>
+                <div style="background: var(--light); padding: 2rem; border-radius: 1rem; text-align: center; border: 1px solid var(--border);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🌱</div>
+                    <div style="font-weight: 700; margin-bottom: 0.5rem; font-size: 1.125rem;">Green Hero</div>
+                    <div style="color: var(--text-light);">Environmental champion</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Professional AI Chatbot -->
+    <button class="chat-toggle" onclick="toggleChat()">💬</button>
+    <div id="chatbot" class="chatbot">
+        <div class="chat-header">
+            <h3>AI Recycling Assistant</h3>
+            <button onclick="toggleChat()" style="background: none; border: none; color: white; font-size: 1.5rem;">×</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                👋 Hi! I'm your professional AI recycling assistant. I can help you with:
+                <br>• E-waste identification and safety
+                <br>• Recycling best practices
+                <br>• Platform feature guidance
+                <br>• Personalized advice
+                <br><br>What would you like to know?
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Ask me anything about recycling..." onkeypress="handleChatKeypress(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentStream = null;
+        let currentSection = 'dashboard';
+        let analysisCount = 0;
+
+        // Theme toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+        }
+
+        // Section navigation with professional styling
+        function showSection(sectionName, event) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Add active class to nav link if event is provided
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            currentSection = sectionName;
+            
+            // Initialize section-specific functionality
+            if (sectionName === 'iot') {
+                initializeSmartBins();
+            }
+        }
+
+        // Professional camera functionality with reliability improvements
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 },
+                        frameRate: { ideal: 30 }
+                    } 
+                });
+                
+                const video = document.getElementById('cameraVideo');
+                video.srcObject = stream;
+                currentStream = stream;
+                
+                document.getElementById('startCamera').disabled = true;
+                document.getElementById('captureBtn').disabled = false;
+                document.getElementById('stopCamera').disabled = false;
+                document.getElementById('cameraStatus').textContent = 'Camera Active';
+                
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                document.getElementById('cameraStatus').textContent = 'Camera Error - Please check permissions';
+            }
+        }
+
+        function stopCamera() {
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+                currentStream = null;
+            }
+            
+            const video = document.getElementById('cameraVideo');
+            video.srcObject = null;
+            
+            document.getElementById('startCamera').disabled = false;
+            document.getElementById('captureBtn').disabled = true;
+            document.getElementById('stopCamera').disabled = true;
+            document.getElementById('cameraStatus').textContent = 'Camera Off';
+        }
+
+        // Enhanced analysis with dynamic, non-repetitive output
+        function captureAndAnalyze() {
+            const video = document.getElementById('cameraVideo');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0);
+            
+            const imageData = canvas.toDataURL('image/jpeg');
+            analysisCount++;
+            
+            // Simulate AI analysis with dynamic, non-repetitive results
+            setTimeout(() => {
+                const result = document.getElementById('visionResult');
+                const componentsList = document.getElementById('componentsList');
+                
+                // Dynamic component generation based on analysis count
+                const componentTemplates = [
+                    { name: 'Lithium Battery', type: 'Li-ion 2000mAh', confidence: 95, icon: '🔋', color: '#3b82f6' },
+                    { name: 'Circuit Board', type: 'Motherboard PCB', confidence: 87, icon: '💻', color: '#10b981' },
+                    { name: 'Connector', type: 'USB-C Port', confidence: 92, icon: '🔌', color: '#f59e0b' },
+                    { name: 'Display Panel', type: 'LCD Screen', confidence: 78, icon: '📱', color: '#8b5cf6' },
+                    { name: 'Processor', type: 'CPU Chip', confidence: 89, icon: '🧠', color: '#ef4444' },
+                    { name: 'Memory Module', type: 'RAM Stick', confidence: 83, icon: '💾', color: '#06b6d4' }
+                ];
+                
+                // Generate dynamic results based on analysis count
+                const numComponents = Math.min(3 + (analysisCount % 3), 6);
+                const selectedComponents = componentTemplates
+                    .sort(() => 0.5 - Math.random())
+                    .slice(0, numComponents)
+                    .map(comp => ({
+                        ...comp,
+                        confidence: comp.confidence + Math.floor(Math.random() * 10) - 5
+                    }));
+                
+                componentsList.innerHTML = selectedComponents.map(comp => `
+                    <div class="component-item">
+                        <div class="component-info">
+                            <div class="component-icon" style="background: ${comp.color};">${comp.icon}</div>
+                            <div>
+                                <strong>${comp.name}</strong>
+                                <br><small>${comp.type}</small>
+                            </div>
+                        </div>
+                        <div class="confidence">${Math.max(0, Math.min(100, comp.confidence))}%</div>
+                    </div>
+                `).join('');
+                
+                result.classList.add('active');
+                
+            }, 2000);
+        }
+
+        // Smart Bins functionality
+        function initializeSmartBins() {
+            const binGrid = document.getElementById('binGrid');
+            const filterSelect = document.getElementById('binFilter');
+            const optimizeBtn = document.getElementById('optimizeRoutesBtn');
+
+            const bins = [
+                { id: 'bin-001', name: 'Central Park Bin', location: 'Downtown', lastPickup: '2025-09-20', fill: 65, status: 'online' },
+                { id: 'bin-002', name: 'City Library Bin', location: 'West Side', lastPickup: '2025-09-25', fill: 85, status: 'warning' },
+                { id: 'bin-003', name: 'Tech Park Bin', location: 'Innovation Hub', lastPickup: '2025-09-24', fill: 30, status: 'online' },
+                { id: 'bin-004', name: 'River Walk Bin', location: 'Riverside', lastPickup: '2025-09-22', fill: 95, status: 'warning' },
+                { id: 'bin-005', name: 'Old Town Bin', location: 'Old Town', lastPickup: '2025-09-18', fill: 15, status: 'offline' }
+            ];
+
+            function renderBins(filter = 'all') {
+                const visible = bins.filter(b => filter === 'all' ? true : b.status === filter);
+                binGrid.innerHTML = visible.map(bin => `
+                    <div class="smart-bin">
+                        <div class="bin-status ${bin.status}"></div>
+                        <h4>${bin.name}</h4>
+                        <small style="color: var(--text-light);">${bin.location} · Last pickup: ${bin.lastPickup}</small>
+                        <div class="bin-fill">
+                            <div class="bin-fill-level" style="height: ${bin.fill}%;"></div>
+                        </div>
+                        <p>${bin.fill}% Full</p>
+                        <small>${bin.status === 'warning' ? 'Needs collection' : (bin.status === 'offline' ? 'Offline' : 'Optimal capacity')}</small>
+                        <div style="display:flex; gap:0.5rem; justify-content:center; margin-top:0.75rem;">
+                            <button class="camera-btn" onclick="alert('Pickup scheduled for ${bin.name}')">Schedule Pickup</button>
+                            <button class="camera-btn" onclick="alert('Bin ${bin.id} details: Sensors OK, Battery 92%, Connectivity Stable')">View Details</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Initial render
+            renderBins();
+
+            // Filter handling
+            if (filterSelect) {
+                filterSelect.onchange = function() { renderBins(this.value); };
+            }
+
+            // Route optimization simulation
+            if (optimizeBtn) {
+                optimizeBtn.onclick = function() {
+                    const needsPickup = bins.filter(b => b.status === 'warning').map(b => b.name).join(' → ');
+                    alert(needsPickup ? `Optimized Route: ${needsPickup}` : 'No pickups required. All bins optimal.');
+                };
+            }
+        }
+
+        // Impact metrics filtering
+        function filterMetrics(period) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Simulate data filtering with professional metrics
+            const metrics = document.querySelectorAll('.metric-value');
+            const values = {
+                all: ['2.4', '156', '89%', '$3.2K'],
+                month: ['1.8', '98', '92%', '$2.1K'],
+                week: ['0.6', '32', '88%', '$680'],
+                day: ['0.2', '8', '85%', '$150']
+            };
+            
+            metrics.forEach((metric, index) => {
+                metric.textContent = values[period][index];
+            });
+        }
+
+        // Recycling process simulation
+        function startRecyclingProcess() {
+            alert('Battery recycling process initiated! Advanced AI will analyze, dismantle, and recover valuable materials from your battery.');
+        }
+
+        // Professional Chatbot with enhanced responses
+        function toggleChat() {
+            const chatbot = document.getElementById('chatbot');
+            chatbot.classList.toggle('active');
+        }
+
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const messages = document.getElementById('chatMessages');
+            const message = input.value.trim();
+            
+            if (message) {
+                // Add user message
+                messages.innerHTML += `<div class="message user">${message}</div>`;
+                input.value = '';
+                
+                // Show typing indicator
+                messages.innerHTML += `<div class="message bot typing">AI is analyzing your question...</div>`;
+                messages.scrollTop = messages.scrollHeight;
+                
+                // Enhanced AI responses based on current section and user intent
+                setTimeout(() => {
+                    // Remove typing indicator
+                    messages.innerHTML = messages.innerHTML.replace(
+                        '<div class="message bot typing">AI is analyzing your question...</div>', ''
+                    );
+                    
+                    // Basic intent detection from user text
+                    const text = message.toLowerCase();
+                    const intent = (() => {
+                        if (/schedule|pickup|collect/.test(text)) return 'pickup';
+                        if (/camera|vision|detect|analy/.test(text)) return 'vision';
+                        if (/bin|iot|route|optimi/.test(text)) return 'iot';
+                        if (/recycl|process|metal|chem|lithium|cobalt|nickel/.test(text)) return 'recycling';
+                        if (/impact|co2|carbon|metric|progress/.test(text)) return 'impact';
+                        if (/reward|points|badge|goal/.test(text)) return 'rewards';
+                        if (/battery|life|charge|temperature|usage|soh/.test(text)) return 'batteryLife';
+                        return 'general';
+                    })();
+
+                    const sectionResponses = {
+                        vision: [
+                            "Great question about computer vision! Our AI can identify components with 95%+ accuracy. Try uploading an image to see it in action.",
+                            "The Vision AI section uses advanced machine learning to detect e-waste components instantly. What specific component are you looking to identify?",
+                            "Our camera detection system provides real-time analysis. Would you like me to guide you through the process?"
+                        ],
+                        recycling: [
+                            "Battery recycling recovers valuable metals like lithium, cobalt, and nickel while conserving natural resources. Our AI can identify the best recycling method for your battery type. What would you like to know about battery recycling?",
+                            "Our advanced recycling process can recover 95% of materials from used batteries. This creates circular economy opportunities and reduces environmental impact. Would you like to learn about our smart recycling process?",
+                            "Recycled batteries can be repurposed for home energy storage, renewable power integration, and other sustainable applications. I can guide you through extending your battery life and maximizing its value. What's your main concern about battery usage?",
+                            "Smart battery management can extend your battery life by 3-5 years! I can help you optimize charging, temperature control, and usage patterns. What type of device are you using?",
+                            "Our recycling process creates $2.5B in annual market value and 50,000+ green jobs. Recycled materials support renewable energy projects and reduce mining by 60%. How can I help you contribute to this circular economy?"
+                        ],
+                        iot: [
+                            "Our smart bins use IoT sensors to monitor capacity in real-time. This helps optimize collection routes and reduce costs.",
+                            "The smart bin system automatically schedules pickups when bins reach 80% capacity. Would you like to schedule a pickup?",
+                            "IoT technology enables us to track bin status, optimize routes, and provide real-time updates to users."
+                        ],
+                        impact: [
+                            "Your environmental impact is tracked in real-time. You've saved 2.4 tons of CO₂ and recycled 156 devices!",
+                            "The impact metrics show your contribution to sustainability. Keep recycling to increase your positive impact!",
+                            "Your recycling efforts are making a real difference. Every device recycled helps protect our environment."
+                        ],
+                        rewards: [
+                            "You're doing great with 1,250 points! Keep recycling to unlock new achievements and rewards.",
+                            "Your Eco Warrior badge shows your commitment to sustainability. What's your next goal?",
+                            "The rewards system motivates continued recycling. You're on track for the next milestone!"
+                        ],
+                        pickup: [
+                            "Sure — open Smart Bins and click ‘Schedule Pickup’ on any bin marked ‘Needs Pickup’.",
+                            "Pickups trigger at ~80% capacity. Filter by ‘Needs Pickup’, then schedule right from the card.",
+                            "Use ‘Optimize Collection Routes’ to create the best pickup order for all high-fill bins."
+                        ],
+                        batteryLife: [
+                            "To extend battery life: keep charge 20–80%, avoid heat, prefer slow charging.",
+                            "Monitor SOH and temperature (ideal 20–25°C). Avoid frequent 0–100% cycles.",
+                            "Enable battery saver, lower screen brightness, and close unused apps to reduce drain."
+                        ],
+                        general: [
+                            "I can help with Vision AI, Recycling, Smart Bins, Flow, Impact, and Rewards. Where shall we start?",
+                            "Tell me your battery type (Li-ion, NiMH, Lead-Acid) and condition, and I’ll suggest the best recycling path.",
+                            "Want to schedule a pickup or analyze a device? Go to that section and I’ll guide you step-by-step."
+                        ]
+                    };
+                    
+                    const responses = (sectionResponses[intent] || sectionResponses[currentSection] || sectionResponses.general);
+                    
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    messages.innerHTML += `<div class="message bot">${randomResponse}</div>`;
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1500);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('startCamera').addEventListener('click', startCamera);
+        document.getElementById('stopCamera').addEventListener('click', stopCamera);
+        document.getElementById('captureBtn').addEventListener('click', captureAndAnalyze);
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize smart bins if on IoT section
+            if (currentSection === 'iot') {
+                initializeSmartBins();
+            }
+        });
+    </script>
+</body>
+</html>
