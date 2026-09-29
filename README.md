@@ -77,7 +77,6 @@ Includes a gamification concept to encourage responsible recycling and user part
 EcoRecycle-AI/
 │
 ├── index.html
-├── .gitattributes
 └── README.md
 ```
 
